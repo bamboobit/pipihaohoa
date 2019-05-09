@@ -1,4 +1,4 @@
-package com.pipihaohao.demo.entity;
+package com.pipihaohao.demo.entity.mysql;
 
 import lombok.Data;
 
@@ -19,4 +19,5 @@ public class UserInfo {
     private Integer uid;
     private String userName;
     private String phone;
+    private Integer aid;
 }

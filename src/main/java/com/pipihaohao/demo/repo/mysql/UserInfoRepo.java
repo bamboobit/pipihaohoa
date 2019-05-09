@@ -1,6 +1,6 @@
-package com.pipihaohao.demo.repo;
+package com.pipihaohao.demo.repo.mysql;
 
-import com.pipihaohao.demo.entity.UserInfo;
+import com.pipihaohao.demo.entity.mysql.UserInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

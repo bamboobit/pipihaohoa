@@ -1,7 +1,7 @@
-package com.pipihaohao.demo.config;
+package com.pipihaohao.demo.config.interceptor;
 
+import com.pipihaohao.demo.config.interceptor.ResponseMetricsInterceptor;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**

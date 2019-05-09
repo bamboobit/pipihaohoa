@@ -1,10 +1,9 @@
 package com.pipihaohao.demo.controller;
 
-import com.pipihaohao.demo.entity.UserInfo;
-import com.pipihaohao.demo.repo.UserInfoRepo;
+import com.pipihaohao.demo.entity.mysql.UserInfo;
+import com.pipihaohao.demo.repo.mysql.UserInfoRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
