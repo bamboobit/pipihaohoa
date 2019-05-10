@@ -4,6 +4,7 @@ import lombok.Data;
 
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 /**
  * @Auther: xfh
@@ -17,7 +18,13 @@ public class UserInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer uid;
-    private String userName;
-    private String phone;
-    private Integer aid;
+    private String password;
+    private String email;
+    private Timestamp createAt;
+
+    @PrePersist
+    public void prePersist() {
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        createAt = timestamp;
+    }
 }

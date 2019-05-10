@@ -9,4 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @Description:
  */
 public interface UserInfoRepo extends JpaRepository<UserInfo,Integer> {
+    UserInfo finByEmail(String email);
 }

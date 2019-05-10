@@ -1,12 +1,20 @@
 package com.pipihaohao.demo.controller;
 
 import com.pipihaohao.demo.entity.mysql.UserInfo;
+import com.pipihaohao.demo.entity.vo.ErrorCode;
+import com.pipihaohao.demo.entity.vo.UserRegister;
 import com.pipihaohao.demo.repo.mysql.UserInfoRepo;
+import com.pipihaohao.demo.utils.JsonResult;
+import com.pipihaohao.demo.utils.RSAUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
+import java.util.Map;
 
 /**
  * @Auther: xfh
@@ -15,19 +23,30 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Slf4j
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/v1/user")
 public class UserController {
 
+    @Value("${PUBLIC_KEY}")
+    private String public_key;
     @Autowired
     private UserInfoRepo userInfoRepo;
 
-    @RequestMapping("/add")
-    public String addUser(@RequestParam("name") String name, @RequestParam("phone") String phone){
-        UserInfo userInfo = new UserInfo();
-        userInfo.setUserName(name);
-        userInfo.setPhone(phone);
+    @RequestMapping("/register")
+    public JsonResult addUser(@Valid UserRegister userRegister, BindingResult check){
+        if(check.hasErrors()){
+            String msg = check.getAllErrors().get(0).getDefaultMessage();
+            return JsonResult.buildErrorResult(msg,ErrorCode.ERROR_PARAMS.getCode(),null);
+        }
+        UserInfo userInfo = userInfoRepo.finByEmail(userRegister.getEmail());
+        if(null != userInfo){
+            return JsonResult.buildErrorResult(ErrorCode.REGIETERED_EMAIL.getMsg(),ErrorCode.REGIETERED_EMAIL.getCode(),null);
+        }
+        userInfo.setEmail(userRegister.getEmail());
+        /*Map<String,String> map = RSAUtil.generateKeyPair();
+        String password = RSAUtil.encrypt(userRegister.getPassword(),map.get("publicKey"));*/
+        userInfo.setPassword(userRegister.getPassword());
         userInfoRepo.save(userInfo);
-        return "成功";
+        return JsonResult.buildSucceedResult(ErrorCode.SUCCESS.getMsg(),ErrorCode.SUCCESS.getCode(),null);
     }
     @RequestMapping("/test")
     public String test(){
