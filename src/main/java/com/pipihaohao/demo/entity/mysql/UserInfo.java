@@ -21,6 +21,8 @@ public class UserInfo {
     private String password;
     private String email;
     private Timestamp createAt;
+    private Timestamp updateAt;
+    private String nickName;
 
     @PrePersist
     public void prePersist() {

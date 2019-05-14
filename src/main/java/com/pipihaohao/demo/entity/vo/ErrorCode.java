@@ -13,7 +13,11 @@ public enum ErrorCode {
     ERROR_EMAIL(-20101,"密码不合法"),
     ERROR_PASSWOR(-20102,"邮箱不合法"),
     REGIETERED_EMAIL(-20111,"邮箱已注册"),
-    ERROR_PARAMS(-11111,"参数错误")
+    ERROR_PARAMS(-11111,"参数错误"),
+    TOKEN_EXPIRE(-1,"token过期"),
+    TOKEN_INVALID(-2,"token不合法"),
+    AUTH_INVALID(-3,"用户不合法"),
+
     ;
     private Integer code;
     private String msg;
