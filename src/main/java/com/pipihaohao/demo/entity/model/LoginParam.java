@@ -6,5 +6,6 @@ package com.pipihaohao.demo.entity.model;
  * @Description:
  */
 public class LoginParam {
+
     //正常数据
 }
