@@ -6,4 +6,5 @@ package com.pipihaohao.demo.entity.model;
  * @Description:
  */
 public class LoginParam {
+    //脏数据1
 }
