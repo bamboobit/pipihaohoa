@@ -10,7 +10,7 @@ import java.util.List;
  * @Date: 2019/5/13
  * @Description:
  */
-public class DividCake {
+/*public class DividCake {
     private static  int maxPeople(int[] people,int[] cake){
         Arrays.sort(people);
         Arrays.sort(cake);
@@ -29,4 +29,4 @@ public class DividCake {
         int[] cake ={12,10};
         Integer num = maxPeople(people,cake);
     }
-}
+}*/
