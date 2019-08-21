@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 定义日志文件 输入位置 -->
+    <property name="log.dir" value="logs"/>
+    <!-- 日志最大的历史 30天 -->
+    <property name="maxHistory" value="3"/>
+
+    <!-- 包含spring的默认配置 -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+    <jmxConfigurator/>
+
+    <springProperty scope="context" name="applicationName" source="spring.application.name"/>
+    <property name="LOG_FILE" value="${log.dir}/app.log"/>
+    <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener"/>
+
+    <appender name="app" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+            <!-- keep 30 days' worth of history capped at 3GB total size -->
+            <maxHistory>3</maxHistory>
+            <totalSizeCap>100MB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>
+                [%d{yyyy-MM-dd-HH:mm:ss}]|%-5level|%X{X-B3-TraceId:-}|[%thread]|%logger{36}.%M:%L| %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <property name="ACCESS_LOG_FILE" value="${log.dir}/access/access.log}"/>
+
+    <appender name="accesslog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${ACCESS_LOG_FILE}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${ACCESS_LOG_FILE}.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+            <maxHistory>3</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>
+                %d{yyyy-MM-dd-HH:mm:ss} %m %n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="STDOUT_CONSLE" class="ch.qos.logback.core.ConsoleAppender">
+        <!--<Target>System.out</Target>-->
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-40.40c [%5.5thread] %-5p - %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--business perf log -->
+    <appender name="statFileAppender_service"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${log.dir}/perf_service/perfStats.%d{yyyy-MM-dd}.log.zip
+            </FileNamePattern>
+            <maxHistory>3</maxHistory>
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                %d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n
+            </Pattern>
+        </layout>
+    </appender>
+
+    <!--controller perf log -->
+    <appender name="statFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${log.dir}/perf/perfStats.%d{yyyy-MM-dd}.log.zip</FileNamePattern>
+            <maxHistory>3</maxHistory>
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                %d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n
+            </Pattern>
+        </layout>
+    </appender>
+
+    <!--dao perf log -->
+    <appender name="statFileAppender_dao"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${log.dir}/perf_dao/perfStats.%d{yyyy-MM-dd}.log.zip
+            </FileNamePattern>
+            <maxHistory>3</maxHistory>
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                %d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n
+            </Pattern>
+        </layout>
+    </appender>
+
+    <!--service perf log -->
+    <appender name="CoalescingStatistics_Service"
+              class="org.perf4j.logback.AsyncCoalescingStatisticsAppender">
+        <!-- TimeSlice配置多少时间间隔去做一次汇总写入文件中 -->
+        <timeSlice>10000</timeSlice>
+        <appender-ref ref="statFileAppender_service"/>
+    </appender>
+
+    <appender name="CoalescingStatistics"
+              class="org.perf4j.logback.AsyncCoalescingStatisticsAppender">
+        <!-- TimeSlice配置多少时间间隔去做一次汇总写入文件中 默认值是 30000 ms -->
+        <timeSlice>10000</timeSlice>
+        <appender-ref ref="statFileAppender"/>
+    </appender>
+
+    <!--myibatis perf log -->
+    <appender name="CoalescingStatistics_dao"
+              class="org.perf4j.logback.AsyncCoalescingStatisticsAppender">
+        <!-- TimeSlice配置多少时间间隔去做一次汇总写入文件中 默认值是 30000 ms -->
+        <timeSlice>10000</timeSlice>
+        <appender-ref ref="statFileAppender_dao"/>
+    </appender>
+
+
+    <logger name="access_log" additivity="false">
+        <level value="info"/>
+        <appender-ref ref="accesslog"/>
+    </logger>
+
+    <!-- 性能log -->
+    <logger name="org.perf4j.TimingLogger" level="info" additivity="false">
+        <appender-ref ref="CoalescingStatistics"/>
+    </logger>
+
+    <!-- dao perf log -->
+    <logger name="dao.perf.logger" level="info" additivity="false">
+        <appender-ref ref="CoalescingStatistics_dao"/>
+    </logger>
+
+    <!-- business perf log -->
+    <logger name="service.perf.logger" level="info" additivity="false">
+        <appender-ref ref="CoalescingStatistics_Service"/>
+    </logger>
+
+    <logger name="org.springframework" level="info" additivity="true">
+        <appender-ref ref="app"/>
+        <appender-ref ref="STDOUT_CONSLE"/>
+    </logger>
+
+    <logger name="org.springframework.web" level="INFO"/>
+
+    <root level="info">
+        <appender-ref ref="STDOUT_CONSLE"/>
+        <appender-ref ref="app"/>
+    </root>
+
+
+
+</configuration>

@@ -11,18 +11,20 @@ import java.sql.Timestamp;
  * @Date: 2019/5/8
  * @Description:
  */
-@Table(name = "userInfo")
+@Table(name = "user")
 @Data
 @Entity
 public class UserInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer uid;
-    private String password;
-    private String email;
+    private Integer id;
+    private String name;
+    private Integer age;
     private Timestamp createAt;
     private Timestamp updateAt;
-    private String nickName;
+    private String phone;
+    private String email;
+    private String password;
 
     @PrePersist
     public void prePersist() {

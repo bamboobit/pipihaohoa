@@ -1,3 +1,4 @@
+/*
 package com.pipihaohao.demo.controller;
 
 import com.pipihaohao.demo.entity.pg.AccountInfo;
@@ -8,11 +9,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+*/
 /**
  * @Auther: xfh
  * @Date: 2019/5/9
  * @Description:
- */
+ *//*
+
 @RestController
 @RequestMapping("/account")
 @Slf4j
@@ -29,3 +32,4 @@ public class AccountController {
         return "success";
     }
 }
+*/

@@ -1,12 +1,16 @@
 package com.pipihaohao.demo.config.security;
 
+import com.alibaba.fastjson.JSONObject;
 import com.pipihaohao.demo.config.security.NcfAuthenticationEntryPoint;
 import com.pipihaohao.demo.config.security.NcfAuthenticationTokenFilter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,6 +28,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  * @Description:
  */
 @SuppressWarnings("SpringJavaAutowiringInspection")
+@Slf4j
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -57,9 +62,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new NcfAuthenticationTokenFilter();
     }
 
+    /*
+    * Spring Security 4.x -> 5.x */
+    @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         String[] allowedRoutesArr = allowedRoutes.split(",");
+        log.info("allowedRoutesArr={}", JSONObject.toJSONString(allowedRoutesArr));
         httpSecurity.csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
@@ -69,6 +83,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
         httpSecurity.headers().cacheControl();
         httpSecurity.headers().frameOptions().disable();
-
     }
 }

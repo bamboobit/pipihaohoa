@@ -25,16 +25,15 @@ public class NcfUserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        UserInfo userInfo = userInfoRepo.finByEmail(email);
+        UserInfo userInfo = userInfoRepo.findByEmail(email);
         if (null == userInfo) {
             throw new UsernameNotFoundException(String.format("No user found with username '%s'.", email));
         }
         log.debug("查询到用户信息userInfo={}", userInfo);
         Login login = new Login();
-        login.setUserId(userInfo.getUid());
+        login.setUserId(userInfo.getId());
         login.setPassword(userInfo.getPassword());
         login.setEmail(userInfo.getEmail());
-        login.setNickname(userInfo.getNickName());
         login.setCreateAt(userInfo.getCreateAt().toString());
         login.setUpdateAt(userInfo.getUpdateAt().toString());
         NcfUser ncfUser = NcfUserFactory.create(login);

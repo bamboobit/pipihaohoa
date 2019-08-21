@@ -8,4 +8,5 @@ import com.pipihaohao.demo.entity.mysql.UserInfo;
  * @Description:
  */
 public interface UserService {
+    Integer findMaxId();
 }

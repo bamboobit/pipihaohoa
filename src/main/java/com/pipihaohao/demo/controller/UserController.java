@@ -1,18 +1,23 @@
 package com.pipihaohao.demo.controller;
 
+import com.maxmind.geoip2.record.Location;
 import com.pipihaohao.demo.entity.mysql.UserInfo;
 import com.pipihaohao.demo.entity.vo.ErrorCode;
 import com.pipihaohao.demo.entity.vo.UserRegister;
 import com.pipihaohao.demo.repo.mysql.UserInfoRepo;
+import com.pipihaohao.demo.utils.IpToLocationUtils;
 import com.pipihaohao.demo.utils.JsonResult;
 import com.pipihaohao.demo.utils.RSAUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpRequest;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Map;
 
@@ -37,7 +42,7 @@ public class UserController {
             String msg = check.getAllErrors().get(0).getDefaultMessage();
             return JsonResult.buildErrorResult(msg,ErrorCode.ERROR_PARAMS.getCode(),null);
         }
-        UserInfo userInfo = userInfoRepo.finByEmail(userRegister.getEmail());
+        UserInfo userInfo = userInfoRepo.findByEmail(userRegister.getEmail());
         if(null != userInfo){
             return JsonResult.buildErrorResult(ErrorCode.REGIETERED_EMAIL.getMsg(),ErrorCode.REGIETERED_EMAIL.getCode(),null);
         }
@@ -53,4 +58,11 @@ public class UserController {
         log.info("in");
         return "111";
     }
+
+    @GetMapping(value = "/request/location")
+    public JsonResult getRequestLocation(HttpServletRequest request)throws Exception{
+        Location location = IpToLocationUtils.getLocationByIP(request);
+        return JsonResult.buildSucceedResult(ErrorCode.SUCCESS.getMsg(),ErrorCode.SUCCESS.getCode(),location);
+    }
+
 }

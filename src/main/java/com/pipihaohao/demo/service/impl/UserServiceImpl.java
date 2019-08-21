@@ -1,6 +1,8 @@
 package com.pipihaohao.demo.service.impl;
 
+import com.pipihaohao.demo.repo.mysql.UserInfoRepo;
 import com.pipihaohao.demo.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -10,4 +12,11 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserServiceImpl implements UserService {
+
+    @Autowired
+    UserInfoRepo userInfoRepo;
+    @Override
+    public Integer findMaxId(){
+        return 0;
+    }
 }

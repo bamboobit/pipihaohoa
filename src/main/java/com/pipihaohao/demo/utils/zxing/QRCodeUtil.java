@@ -35,15 +35,19 @@ public class QRCodeUtil {
     private static ErrorCorrectionLevel level = ErrorCorrectionLevel.H;  //二维码容错率
     private static BarcodeFormat formate = BarcodeFormat.QR_CODE;//二维码样式
 
-    private static int onColor = 0xFF000000;     //前景色(0xFF000000 黑)
-    private static int offColor = 0xFFF000FF;    //背景色(0xFFFFFFFF 白)
+    private static int onColor = 0xFF807060;     //前景色(0xFF000000 黑)807060
+    private static int offColor = 0xFFFFB6C1;    //背景色(0xFFFFFFFF 白)
 
 
-    private static BufferedImage createImage(String content, String imgPath, boolean needCompress) throws Exception {
+    public static BufferedImage createImage(String content, String imgPath, boolean needCompress) throws Exception {
         Hashtable hints = new Hashtable();
         hints.put(EncodeHintType.ERROR_CORRECTION, level);
         hints.put(EncodeHintType.CHARACTER_SET, CHARSET);
         hints.put(EncodeHintType.MARGIN, margin);
+        //精度
+        hints.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
+        //复杂模式
+        hints.put(DecodeHintType.PURE_BARCODE, Boolean.TRUE);
         BitMatrix bitMatrix = new MultiFormatWriter().encode(content, formate, QRCODE_SIZE_W, QRCODE_SIZE_H,
                 hints);
         int width = bitMatrix.getWidth();

@@ -60,6 +60,9 @@ public class NcfAuthenticationTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         StringBuffer requestURL = request.getRequestURL();
         String serverPath = request.getServletPath();
+        if(serverPath.contains("swagger-ui.html")){
+            chain.doFilter(request, response);
+        }
         String authHeader = request.getHeader(this.tokenHeader);
         if (StringUtils.isNotBlank(authHeader) && authHeader.startsWith(tokenHead)) {
             final String authToken = authHeader.substring(tokenHead.length()); // The part after "Bearer "

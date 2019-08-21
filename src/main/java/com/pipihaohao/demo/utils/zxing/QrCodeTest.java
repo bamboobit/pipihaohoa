@@ -52,7 +52,7 @@ public class QrCodeTest {
                 "不仅爱你伟岸的身躯，\n" +
                 "也爱你坚持的位置，\n" +
                 "足下的土地。";*/
-        String text = "https://www.baidu.com/";
+        String text = "https://weibo.com/u/1836435294";
         // 嵌入二维码的图片路径
         String imgPath = "/Users/renren/Documents/bamboo.jpeg";
         // 生成的二维码的路径及名称
